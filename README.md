@@ -1,4 +1,4 @@
-# hugegraph-client-go
+# go-hugegraph
 
 #### 介绍
 基于Go语言的hugegraph client SDK工具
@@ -9,9 +9,18 @@
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  go get gitee.com/go-hugegraph
+
+#### 实现API
+
+
+|API|说明|
+|--|--|
+|schema|获取模型schema|
+|version|获取版本信息|
+|||
+
+
 
 #### 使用说明
 

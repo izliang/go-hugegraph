@@ -1,4 +1,4 @@
-# hugegraph-client-go
+# hugegraph
 
 #### Description
 基于Go语言的hugegraph client SDK工具
