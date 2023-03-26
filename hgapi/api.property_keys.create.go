@@ -13,39 +13,29 @@ type PropertyKeyDataType string
 type PropertyCardinalityType string
 
 const (
-	PropertyDataTypeDouble PropertyKeyDataType = "DOUBLE"
-
-	PropertyDataTypeByte PropertyKeyDataType = "BYTE"
-
+	PropertyDataTypeDouble  PropertyKeyDataType = "DOUBLE"
+	PropertyDataTypeByte    PropertyKeyDataType = "BYTE"
 	PropertyDataTypeUnknown PropertyKeyDataType = "UNKNOWN"
-
-	PropertyDataTypeUuid PropertyKeyDataType = "UUID"
-
-	PropertyDataTypeFloat PropertyKeyDataType = "FLOAT"
-
-	PropertyDataTypeBlob PropertyKeyDataType = "BLOB"
-
-	PropertyDataTypeDate PropertyKeyDataType = "DATE"
-
-	PropertyDataTypeObject PropertyKeyDataType = "OBJECT"
-
+	PropertyDataTypeUuid    PropertyKeyDataType = "UUID"
+	PropertyDataTypeFloat   PropertyKeyDataType = "FLOAT"
+	PropertyDataTypeBlob    PropertyKeyDataType = "BLOB"
+	PropertyDataTypeDate    PropertyKeyDataType = "DATE"
+	PropertyDataTypeObject  PropertyKeyDataType = "OBJECT"
 	PropertyDataTypeBoolean PropertyKeyDataType = "BOOLEAN"
+	PropertyDataTypeText    PropertyKeyDataType = "TEXT"
+	PropertyDataTypeInt     PropertyKeyDataType = "INT"
+	PropertyDataTypeLong    PropertyKeyDataType = "LONG"
 
-	PropertyDataTypeText PropertyKeyDataType = "TEXT"
-
-	PropertyDataTypeInt PropertyKeyDataType = "INT"
-
-	PropertyDataTypeLong PropertyKeyDataType = "LONG"
-
-	// SINGLE, SET, LIST
 	PropertyCardinalityTypeSingle PropertyCardinalityType = "SINGLE"
+	PropertyCardinalityTypeSet    PropertyCardinalityType = "SET"
+	PropertyCardinalityTypeList   PropertyCardinalityType = "LIST"
 )
 
 // ----- API Definition -------------------------------------------------------
 
-// CatSegments provides low-level information about the segments in the shards of an index.
+// 创建一个 PropertyKey
 //
-// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/5.x/cat-segments.html.
+// See full documentation https://hugegraph.apache.org/cn/docs/clients/restful-api/propertykey/#121-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-propertykey
 //
 func newPropertyKeysCreateFunc(t Transport) PropertyKeysCreate {
 	return func(o ...func(*PropertyKeysCreateRequest)) (*PropertyKeysCreateResponse, error) {
@@ -127,7 +117,6 @@ func (v PropertyKeysCreate) WithName(name string) func(*PropertyKeysCreateReques
 }
 
 func (v PropertyKeysCreate) WithDataType(dataType PropertyKeyDataType) func(*PropertyKeysCreateRequest) {
-	//DOUBLE, BYTE, UNKNOWN, UUID, FLOAT, BLOB, DATE, OBJECT, BOOLEAN, TEXT, INT, LONG
 	return func(r *PropertyKeysCreateRequest) {
 		r.DataType = dataType
 	}

@@ -91,10 +91,10 @@ func TestSchemaGet(t *testing.T) {
 func TestPropertyKeysCreate(t *testing.T) {
 	client := initClient()
 
-	res, err := client.PropertyKeysCreate(
-		client.PropertyKeysCreate.WithName("title"),
-		client.PropertyKeysCreate.WithDataType(hgapi.PropertyDataTypeInt),
-		client.PropertyKeysCreate.WithCardinality(hgapi.PropertyCardinalityTypeSingle),
+	res, err := client.PropertyKeys.Create(
+		client.PropertyKeys.Create.WithName("title"),
+		client.PropertyKeys.Create.WithDataType(hgapi.PropertyDataTypeInt),
+		client.PropertyKeys.Create.WithCardinality(hgapi.PropertyCardinalityTypeSingle),
 	)
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
@@ -112,7 +112,7 @@ func TestPropertyKeysCreate(t *testing.T) {
 func TestPropertyKeysGet(t *testing.T) {
 	client := initClient()
 
-	res, err := client.PropertyKeysGet()
+	res, err := client.PropertyKeys.Get()
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
@@ -124,4 +124,54 @@ func TestPropertyKeysGet(t *testing.T) {
 	}
 
 	fmt.Println("我是结果=>" + string(bytes))
+}
+
+func TestPropertyKeysDeleteByName(t *testing.T) {
+	client := initClient()
+
+	res, err := client.PropertyKeys.DeleteByName(
+		client.PropertyKeys.DeleteByName.WithName("age"),
+	)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+	defer res.Body.Close()
+
+	bytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+
+	fmt.Println("我是结果=>" + string(bytes))
+}
+
+func TestPropertyKeysGetByName(t *testing.T) {
+	client := initClient()
+
+	res, err := client.PropertyKeys.GetByName(
+		client.PropertyKeys.GetByName.WithName("title"),
+	)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+
+	fmt.Printf("我是结果=>%+v\n", res.Data)
+}
+
+func TestProperKeysUpdateUserdata(t *testing.T) {
+
+	client := initClient()
+
+	res, err := client.PropertyKeys.UpdateUserdata(
+		client.PropertyKeys.UpdateUserdata.WithName("title"),
+		client.PropertyKeys.UpdateUserdata.WithUserdata(hgapi.PropertyKeysUpdateUserData{
+			Min: 1,
+			Max: 255,
+		}),
+	)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+
+	fmt.Printf("我是结果=>%+v\n", res.Data)
 }

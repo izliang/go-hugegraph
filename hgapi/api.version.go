@@ -10,9 +10,9 @@ import (
 
 // ----- API Definition -------------------------------------------------------
 
-// CatSegments provides low-level information about the segments in the shards of an index.
+// 查看HugeGraph的版本信息
 //
-// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/5.x/cat-segments.html.
+// See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/other/#1011-%E6%9F%A5%E7%9C%8Bhugegraph%E7%9A%84%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF
 //
 func newVersionFunc(t Transport) Version {
 	return func(o ...func(*VersionRequest)) (*VersionResponse, error) {

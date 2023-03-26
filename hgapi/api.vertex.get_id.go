@@ -9,9 +9,9 @@ import (
 
 // ----- API Definition -------------------------------------------------------
 
-// CatSegments provides low-level information about the segments in the shards of an index.
+// 根据Id获取顶点
 //
-// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/5.x/cat-segments.html.
+// See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/vertex/#217-%E6%A0%B9%E6%8D%AEid%E8%8E%B7%E5%8F%96%E9%A1%B6%E7%82%B9
 //
 func newVertexGetIDFunc(t Transport) VertexGetID {
 	return func(o ...func(req *VertexGetIDRequest)) (*VertexGetIDResponse, error) {
@@ -71,4 +71,3 @@ func (v VertexGetID) WithID(id string) func(*VertexGetIDRequest) {
 		r.ID = id
 	}
 }
-

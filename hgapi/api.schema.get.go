@@ -10,9 +10,9 @@ import (
 
 // ----- API Definition -------------------------------------------------------
 
-// CatSegments provides low-level information about the segments in the shards of an index.
+// Schema
 //
-// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/5.x/cat-segments.html.
+// See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/schema/#11-schema
 //
 func newSchemaGetFunc(t Transport) SchemaGet {
 	return func(o ...func(*SchemaGetRequest)) (*SchemaGetResponse, error) {

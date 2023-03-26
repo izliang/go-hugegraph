@@ -10,9 +10,9 @@ import (
 
 // ----- API Definition -------------------------------------------------------
 
-// CatSegments provides low-level information about the segments in the shards of an index.
+// 获取所有的 PropertyKey
 //
-// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/5.x/cat-segments.html.
+// See full documentation https://hugegraph.apache.org/cn/docs/clients/restful-api/propertykey/#123-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%9A%84-propertykey
 //
 func newPropertyKeysGetFunc(t Transport) PropertyKeysGet {
 	return func(o ...func(*PropertyKeysGetRequest)) (*PropertyKeysGetResponse, error) {

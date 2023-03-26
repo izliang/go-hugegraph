@@ -5,21 +5,33 @@ package hgapi
 // API contains the Elasticsearch APIs
 //
 type API struct {
-	Version            Version
-	VertexGetID        VertexGetID
-	SchemaGet          SchemaGet
-	PropertyKeysCreate PropertyKeysCreate
-	PropertyKeysGet    PropertyKeysGet
+	Version      Version
+	VertexGetID  VertexGetID
+	SchemaGet    SchemaGet
+	PropertyKeys *PropertyKeys
+}
+
+type PropertyKeys struct {
+	Create         PropertyKeysCreate
+	Get            PropertyKeysGet
+	DeleteByName   PropertyKeysDeleteByName
+	GetByName      PropertyKeysGetByName
+	UpdateUserdata PropertyKeysUpdateUserdata
 }
 
 // New creates new API
 //
 func New(t Transport) *API {
 	return &API{
-		Version:            newVersionFunc(t),
-		VertexGetID:        newVertexGetIDFunc(t),
-		SchemaGet:          newSchemaGetFunc(t),
-		PropertyKeysCreate: newPropertyKeysCreateFunc(t),
-		PropertyKeysGet:    newPropertyKeysGetFunc(t),
+		Version:     newVersionFunc(t),
+		VertexGetID: newVertexGetIDFunc(t),
+		SchemaGet:   newSchemaGetFunc(t),
+		PropertyKeys: &PropertyKeys{
+			Create:         newPropertyKeysCreateFunc(t),
+			Get:            newPropertyKeysGetFunc(t),
+			DeleteByName:   newPropertyKeysDeleteByNameFunc(t),
+			GetByName:      newPropertyKeysGetByNameFunc(t),
+			UpdateUserdata: newPropertyKeysUpdateUserdataFunc(t),
+		},
 	}
 }
