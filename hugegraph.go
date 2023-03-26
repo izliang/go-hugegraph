@@ -25,6 +25,7 @@ type Config struct {
 type Client struct {
 	*hgapi.API
 	Transport hgtransport.Interface
+	Graph     string
 }
 
 func NewDefaultClient() (*Client, error) {
@@ -60,6 +61,7 @@ func NewClient(cfg Config) (*Client, error) {
 		},
 		Username: cfg.Username,
 		Password: cfg.Password,
+		Graph:    cfg.Graph,
 
 		Transport: cfg.Transport,
 		Logger:    cfg.Logger,

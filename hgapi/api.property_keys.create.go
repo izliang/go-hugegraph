@@ -3,11 +3,42 @@ package hgapi
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
+)
+
+type PropertyKeyDataType string
+type PropertyCardinalityType string
+
+const (
+	PropertyDataTypeDouble PropertyKeyDataType = "DOUBLE"
+
+	PropertyDataTypeByte PropertyKeyDataType = "BYTE"
+
+	PropertyDataTypeUnknown PropertyKeyDataType = "UNKNOWN"
+
+	PropertyDataTypeUuid PropertyKeyDataType = "UUID"
+
+	PropertyDataTypeFloat PropertyKeyDataType = "FLOAT"
+
+	PropertyDataTypeBlob PropertyKeyDataType = "BLOB"
+
+	PropertyDataTypeDate PropertyKeyDataType = "DATE"
+
+	PropertyDataTypeObject PropertyKeyDataType = "OBJECT"
+
+	PropertyDataTypeBoolean PropertyKeyDataType = "BOOLEAN"
+
+	PropertyDataTypeText PropertyKeyDataType = "TEXT"
+
+	PropertyDataTypeInt PropertyKeyDataType = "INT"
+
+	PropertyDataTypeLong PropertyKeyDataType = "LONG"
+
+	// SINGLE, SET, LIST
+	PropertyCardinalityTypeSingle PropertyCardinalityType = "SINGLE"
 )
 
 // ----- API Definition -------------------------------------------------------
@@ -29,11 +60,10 @@ func newPropertyKeysCreateFunc(t Transport) PropertyKeysCreate {
 type PropertyKeysCreate func(o ...func(*PropertyKeysCreateRequest)) (*PropertyKeysCreateResponse, error)
 
 type PropertyKeysCreateRequest struct {
-	ctx         context.Context `json:"-"`
-	Graph       string          `json:"-"`
-	Name        string          `json:"name"`
-	DataType    string          `json:"data_type"`
-	Cardinality string          `json:"cardinality"`
+	ctx         context.Context         `json:"-"`
+	Name        string                  `json:"name"`
+	DataType    PropertyKeyDataType     `json:"data_type"`
+	Cardinality PropertyCardinalityType `json:"cardinality"`
 }
 
 type PropertyKeysCreateResponse struct {
@@ -64,7 +94,7 @@ func (r PropertyKeysCreateRequest) Do(ctx context.Context, transport Transport) 
 	}
 	byteBody, _ := json.Marshal(&r)               // 序列化
 	reader := strings.NewReader(string(byteBody)) // 转化为reader
-	req, _ := newRequest("POST", fmt.Sprintf("/graphs/%s/schema/propertykeys", r.Graph), reader)
+	req, _ := newRequest("POST", "/graphs/${GRAPH_NAME}/schema/propertykeys", reader)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -90,26 +120,20 @@ func (r PropertyKeysCreateRequest) Do(ctx context.Context, transport Transport) 
 	return PropertyKeysCreateResp, nil
 }
 
-func (v PropertyKeysCreate) WithGraph(graph string) func(*PropertyKeysCreateRequest) {
-	return func(r *PropertyKeysCreateRequest) {
-		r.Graph = graph
-	}
-}
-
 func (v PropertyKeysCreate) WithName(name string) func(*PropertyKeysCreateRequest) {
 	return func(r *PropertyKeysCreateRequest) {
 		r.Name = name
 	}
 }
 
-func (v PropertyKeysCreate) WithDataType(dataType string) func(*PropertyKeysCreateRequest) {
+func (v PropertyKeysCreate) WithDataType(dataType PropertyKeyDataType) func(*PropertyKeysCreateRequest) {
 	//DOUBLE, BYTE, UNKNOWN, UUID, FLOAT, BLOB, DATE, OBJECT, BOOLEAN, TEXT, INT, LONG
 	return func(r *PropertyKeysCreateRequest) {
 		r.DataType = dataType
 	}
 }
 
-func (v PropertyKeysCreate) WithCardinality(cardinality string) func(*PropertyKeysCreateRequest) {
+func (v PropertyKeysCreate) WithCardinality(cardinality PropertyCardinalityType) func(*PropertyKeysCreateRequest) {
 	return func(r *PropertyKeysCreateRequest) {
 		r.Cardinality = cardinality
 	}

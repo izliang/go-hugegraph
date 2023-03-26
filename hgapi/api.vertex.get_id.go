@@ -29,7 +29,6 @@ type VertexGetIDRequest struct {
 	Body io.Reader
 	ctx  context.Context
 
-	Graph string
 	Label string
 	ID    string
 }
@@ -42,7 +41,7 @@ type VertexGetIDResponse struct {
 
 func (r VertexGetIDRequest) Do(ctx context.Context, transport Transport) (*VertexGetIDResponse, error) {
 
-	req, _ := newRequest("GET", fmt.Sprintf(`/graphs/%s/graph/vertices/"%s"`, r.Graph, r.ID), r.Body)
+	req, _ := newRequest("GET", fmt.Sprintf(`/graphs/${GRAPH_NAME}/graph/vertices/"%s"`, r.ID), r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -73,8 +72,3 @@ func (v VertexGetID) WithID(id string) func(*VertexGetIDRequest) {
 	}
 }
 
-func (v VertexGetID) WithGraph(graph string) func(*VertexGetIDRequest) {
-	return func(r *VertexGetIDRequest) {
-		r.Graph = graph
-	}
-}

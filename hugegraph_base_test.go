@@ -3,6 +3,7 @@ package hugegraph_test
 import (
 	"fmt"
 	"hugegraph"
+	"hugegraph/hgapi"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -55,7 +56,6 @@ func TestVertexById(t *testing.T) {
 	res, err := client.VertexGetID(
 		client.VertexGetID.WithID("1"),
 		client.VertexGetID.WithLabel("vertex"),
-		client.VertexGetID.WithGraph("hugegraph"),
 	)
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
@@ -74,9 +74,7 @@ func TestSchemaGet(t *testing.T) {
 
 	client := initClient()
 
-	res, err := client.SchemaGet(
-		client.SchemaGet.WithGraph("hugegraph"),
-	)
+	res, err := client.SchemaGet()
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
@@ -94,10 +92,9 @@ func TestPropertyKeysCreate(t *testing.T) {
 	client := initClient()
 
 	res, err := client.PropertyKeysCreate(
-		client.PropertyKeysCreate.WithGraph("hugegraph"),
 		client.PropertyKeysCreate.WithName("title"),
-		client.PropertyKeysCreate.WithDataType("TEXT"),
-		client.PropertyKeysCreate.WithCardinality("SINGLE"),
+		client.PropertyKeysCreate.WithDataType(hgapi.PropertyDataTypeInt),
+		client.PropertyKeysCreate.WithCardinality(hgapi.PropertyCardinalityTypeSingle),
 	)
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
@@ -115,9 +112,7 @@ func TestPropertyKeysCreate(t *testing.T) {
 func TestPropertyKeysGet(t *testing.T) {
 	client := initClient()
 
-	res, err := client.PropertyKeysGet(
-		client.PropertyKeysGet.WithGraph("hugegraph"),
-	)
+	res, err := client.PropertyKeysGet()
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}

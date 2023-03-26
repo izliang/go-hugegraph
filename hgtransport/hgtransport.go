@@ -38,6 +38,7 @@ type Config struct {
 	URL      *url.URL
 	Username string
 	Password string
+	Graph    string
 
 	Transport http.RoundTripper
 	Logger    Logger
@@ -49,6 +50,7 @@ type Client struct {
 	url      *url.URL
 	username string
 	password string
+	graph    string
 
 	transport http.RoundTripper
 	logger    Logger
@@ -68,6 +70,7 @@ func New(cfg Config) *Client {
 		username: cfg.Username,
 		password: cfg.Password,
 
+		graph:     cfg.Graph,
 		transport: cfg.Transport,
 		logger:    cfg.Logger,
 	}
@@ -82,6 +85,7 @@ func (c *Client) Perform(req *http.Request) (*http.Response, error) {
 	c.setUserAgent(req)
 	c.setHost(req)
 	c.setContentTypeJSON(req)
+	c.setGraph(req)
 
 	if _, ok := req.Header["Authorization"]; !ok {
 		c.setBasicAuth(u, req)
@@ -164,6 +168,12 @@ func (c *Client) setHost(req *http.Request) *http.Request {
 
 func (c *Client) setContentTypeJSON(req *http.Request) *http.Request {
 	req.Header.Set("Content-Type", "application/json")
+	return req
+}
+
+func (c *Client) setGraph(req *http.Request) *http.Request {
+
+	req.URL.Path = strings.ReplaceAll(req.URL.Path, "${GRAPH_NAME}", c.graph)
 	return req
 }
 

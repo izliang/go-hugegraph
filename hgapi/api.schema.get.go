@@ -3,7 +3,6 @@ package hgapi
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -28,9 +27,8 @@ func newSchemaGetFunc(t Transport) SchemaGet {
 type SchemaGet func(o ...func(*SchemaGetRequest)) (*SchemaGetResponse, error)
 
 type SchemaGetRequest struct {
-	Body  io.Reader
-	ctx   context.Context
-	Graph string
+	Body io.Reader
+	ctx  context.Context
 }
 
 type SchemaGetResponse struct {
@@ -98,7 +96,7 @@ type SchemaGetResponse struct {
 
 func (r SchemaGetRequest) Do(ctx context.Context, transport Transport) (*SchemaGetResponse, error) {
 
-	req, _ := newRequest("GET", fmt.Sprintf("/graphs/%s/schema", r.Graph), r.Body)
+	req, _ := newRequest("GET", "/graphs/${GRAPH_NAME}/schema", r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -122,10 +120,4 @@ func (r SchemaGetRequest) Do(ctx context.Context, transport Transport) (*SchemaG
 	SchemaGetResp.Header = res.Header
 	SchemaGetResp.Body = res.Body
 	return SchemaGetResp, nil
-}
-
-func (v SchemaGet) WithGraph(graph string) func(*SchemaGetRequest) {
-	return func(r *SchemaGetRequest) {
-		r.Graph = graph
-	}
 }

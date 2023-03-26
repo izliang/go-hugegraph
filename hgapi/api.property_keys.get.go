@@ -3,7 +3,6 @@ package hgapi
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -28,9 +27,8 @@ func newPropertyKeysGetFunc(t Transport) PropertyKeysGet {
 type PropertyKeysGet func(o ...func(*PropertyKeysGetRequest)) (*PropertyKeysGetResponse, error)
 
 type PropertyKeysGetRequest struct {
-	Body  io.Reader
-	ctx   context.Context
-	Graph string
+	Body io.Reader
+	ctx  context.Context
 }
 
 type PropertyKeysGetResponse struct {
@@ -54,7 +52,7 @@ type PropertyKeysGetResponse struct {
 
 func (r PropertyKeysGetRequest) Do(ctx context.Context, transport Transport) (*PropertyKeysGetResponse, error) {
 
-	req, _ := newRequest("GET", fmt.Sprintf("/graphs/%s/schema/propertykeys", r.Graph), r.Body)
+	req, _ := newRequest("GET", "/graphs/${GRAPH_NAME}/schema/propertykeys", r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -78,10 +76,4 @@ func (r PropertyKeysGetRequest) Do(ctx context.Context, transport Transport) (*P
 	PropertyKeysGetResp.Header = res.Header
 	PropertyKeysGetResp.Body = res.Body
 	return PropertyKeysGetResp, nil
-}
-
-func (v PropertyKeysGet) WithGraph(graph string) func(*PropertyKeysGetRequest) {
-	return func(r *PropertyKeysGetRequest) {
-		r.Graph = graph
-	}
 }
