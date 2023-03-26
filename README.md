@@ -1,2 +1,39 @@
 # go-hugegraph
-Client tool based on Hugegraph Go language version
+
+#### 介绍
+基于Go语言的hugegraph client SDK工具
+
+#### 软件架构
+软件架构说明
+
+
+#### 安装教程
+
+1.  go get github.com/go-hugegraph
+
+#### 实现API
+
+
+|API|说明|
+|--|--|
+|schema|获取模型schema|
+|version|获取版本信息|
+|||
+
+
+
+#### 使用说明
+
+1.  xxxx
+2.  xxxx
+3.  xxxx
+
+#### 参与贡献
+
+1.  Fork 本仓库
+2.  新建 Feat_xxx 分支
+3.  提交代码
+4.  新建 Pull Request
+
+
+#### 特技
