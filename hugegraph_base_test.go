@@ -164,6 +164,7 @@ func TestProperKeysUpdateUserdata(t *testing.T) {
 
 	res, err := client.PropertyKeys.UpdateUserdata(
 		client.PropertyKeys.UpdateUserdata.WithName("title"),
+		client.PropertyKeys.UpdateUserdata.WithAction(hgapi.PropertyKeyActionAppend),
 		client.PropertyKeys.UpdateUserdata.WithUserdata(hgapi.PropertyKeysUpdateUserData{
 			Min: 1,
 			Max: 255,
@@ -174,4 +175,46 @@ func TestProperKeysUpdateUserdata(t *testing.T) {
 	}
 
 	fmt.Printf("我是结果=>%+v\n", res.Data)
+}
+
+func TestVertexLabelCreate(t *testing.T) {
+	client := initClient()
+
+	res, err := client.VertexLabel.Create(
+		client.VertexLabel.Create.WithData(hgapi.VertexLabelCreateRequestData{
+			Name:             "vertex",
+			IDStrategy:       hgapi.VertexLabelIDStrategyTypeAutomatic,
+			Properties:       []string{"title"},
+			PrimaryKeys:      nil,
+			NullableKeys:     nil,
+			EnableLabelIndex: true,
+		}),
+	)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+
+	fmt.Printf("我是结果=>%+v\n", res.Data)
+}
+
+func TestGremlinGet(t *testing.T) {
+	client := initClient()
+
+	res, err := client.Gremlin.Get(
+		client.Gremlin.Get.WithGremlinGetData(hgapi.GremlinGetRequestReqData{
+			Gremlin:  "hugegraph.traversal().V('1:marko')",
+			Bindings: "",
+			Language: "",
+			Aliases:  "",
+		}),
+	)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+
+	bytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+	fmt.Println("我是结果=>" + string(bytes))
 }

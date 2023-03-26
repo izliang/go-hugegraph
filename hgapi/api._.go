@@ -9,6 +9,8 @@ type API struct {
 	VertexGetID  VertexGetID
 	SchemaGet    SchemaGet
 	PropertyKeys *PropertyKeys
+	VertexLabel  *VertexLabel
+	Gremlin      *Gremlin
 }
 
 type PropertyKeys struct {
@@ -17,6 +19,13 @@ type PropertyKeys struct {
 	DeleteByName   PropertyKeysDeleteByName
 	GetByName      PropertyKeysGetByName
 	UpdateUserdata PropertyKeysUpdateUserdata
+}
+
+type VertexLabel struct {
+	Create VertexLabelCreate
+}
+type Gremlin struct {
+	Get GremlinGet
 }
 
 // New creates new API
@@ -32,6 +41,12 @@ func New(t Transport) *API {
 			DeleteByName:   newPropertyKeysDeleteByNameFunc(t),
 			GetByName:      newPropertyKeysGetByNameFunc(t),
 			UpdateUserdata: newPropertyKeysUpdateUserdataFunc(t),
+		},
+		VertexLabel: &VertexLabel{
+			Create: newVertexLabelCreateFunc(t),
+		},
+		Gremlin: &Gremlin{
+			Get: newGremlinGetFunc(t),
 		},
 	}
 }
