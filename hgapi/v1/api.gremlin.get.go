@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"hugegraph/hgapi"
+	"github.com/izliang/go-hugegraph/hgapi"
 	"io"
 	"io/ioutil"
 	"net/http"

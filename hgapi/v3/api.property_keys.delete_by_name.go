@@ -1,4 +1,4 @@
-package v1
+package v3
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/izliang/go-hugegraph/hgapi"
+	"github.com/izliang/go-hugegraph/internal/model"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -47,7 +48,7 @@ func (r PropertyKeysDeleteByNameRequest) Do(ctx context.Context, transport hgapi
 		return nil, errors.New("PropertyKeysDeleteByNameRequest Param error, name is not empty")
 	}
 
-	req, _ := hgapi.NewRequest("DELETE", fmt.Sprintf("/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
+	req, _ := hgapi.NewRequest("DELETE", fmt.Sprintf(model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

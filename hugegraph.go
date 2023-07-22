@@ -3,9 +3,9 @@ package hugegraph
 import (
 	"errors"
 	"fmt"
-	v1 "hugegraph/hgapi/v1"
-	v3 "hugegraph/hgapi/v3"
-	"hugegraph/hgtransport"
+	v1 "github.com/izliang/go-hugegraph/hgapi/v1"
+	v3 "github.com/izliang/go-hugegraph/hgapi/v3"
+	"github.com/izliang/go-hugegraph/hgtransport"
 	"net"
 	"net/http"
 	"net/url"

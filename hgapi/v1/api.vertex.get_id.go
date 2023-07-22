@@ -3,8 +3,8 @@ package v1
 import (
 	"context"
 	"fmt"
-	"hugegraph/hgapi"
-	"hugegraph/internal/model"
+	"github.com/izliang/go-hugegraph/hgapi"
+	"github.com/izliang/go-hugegraph/internal/model"
 	"io"
 	"net/http"
 )

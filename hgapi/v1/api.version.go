@@ -3,7 +3,7 @@ package v1
 import (
 	"context"
 	"encoding/json"
-	"hugegraph/hgapi"
+	"github.com/izliang/go-hugegraph/hgapi"
 	"io"
 	"io/ioutil"
 	"net/http"

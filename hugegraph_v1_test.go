@@ -2,8 +2,8 @@ package hugegraph_test
 
 import (
 	"fmt"
-	"hugegraph"
-	"hugegraph/hgapi/v1"
+	"github.com/izliang/go-hugegraph"
+	"github.com/izliang/go-hugegraph/hgapi/v1"
 	"io"
 	"io/ioutil"
 	"log"

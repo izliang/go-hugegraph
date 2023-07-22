@@ -1,6 +1,6 @@
 package v1
 
-import "hugegraph/hgapi"
+import "github.com/izliang/go-hugegraph/hgapi"
 
 // Code generated from specification version 5.6.15 (fe7575a32e2): DO NOT EDIT
 

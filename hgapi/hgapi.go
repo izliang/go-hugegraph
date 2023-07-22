@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"hugegraph/internal/version"
+	"github.com/izliang/go-hugegraph/internal/version"
 )
 
 // VERSION returns the package version as a string.
