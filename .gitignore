@@ -17,4 +17,6 @@
 ci.yml
 go.env
 Makefile
+.gitee
+.idea
 
