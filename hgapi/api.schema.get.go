@@ -3,9 +3,11 @@ package hgapi
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 // ----- API Definition -------------------------------------------------------
@@ -27,8 +29,8 @@ func newSchemaGetFunc(t Transport) SchemaGet {
 type SchemaGet func(o ...func(*SchemaGetRequest)) (*SchemaGetResponse, error)
 
 type SchemaGetRequest struct {
-	Body io.Reader
-	ctx  context.Context
+	ctx    context.Context
+	Format string
 }
 
 type SchemaGetResponse struct {
@@ -96,7 +98,13 @@ type SchemaGetResponse struct {
 
 func (r SchemaGetRequest) Do(ctx context.Context, transport Transport) (*SchemaGetResponse, error) {
 
-	req, _ := newRequest("GET", "/graphs/${GRAPH_NAME}/schema", r.Body)
+	req, _ := newRequest("GET", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema", nil)
+
+	if len(r.Format) > 0 {
+		params := url.Values{}
+		params.Set("format", r.Format)
+		req.URL.RawQuery = params.Encode()
+	}
 
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -120,4 +128,10 @@ func (r SchemaGetRequest) Do(ctx context.Context, transport Transport) (*SchemaG
 	SchemaGetResp.Header = res.Header
 	SchemaGetResp.Body = res.Body
 	return SchemaGetResp, nil
+}
+
+func (v SchemaGet) WithFormat(format string) func(*SchemaGetRequest) {
+	return func(r *SchemaGetRequest) {
+		r.Format = format
+	}
 }

@@ -3,6 +3,7 @@ package hgapi
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -45,7 +46,7 @@ type VertexCreateResponse struct {
 
 func (r VertexCreateRequest) Do(ctx context.Context, transport Transport) (*VertexCreateResponse, error) {
 
-	req, _ := newRequest("GET", "/VertexCreates", r.Body)
+	req, _ := newRequest("GET", model.UrlPrefix+"/VertexCreates", r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

@@ -1,0 +1,24 @@
+Global:
+    version: 2.0
+    group_email: zhaoliang17@baidu.com   # <------ 配置团队邮箱地址，用于接收xx.latest软件版本升级通知邮件
+
+
+Default:
+    profile : [build]
+
+Profiles:
+    - profile:
+      name : build
+      mode: AGENT
+      environment:
+        image: DECK_CENTOS7U5_K3
+        resourceType: SMALL
+        tools:
+          - go: 1.20.latest
+      build:
+        command: make -f Makefile
+      check:
+        - reuse: TASK
+          enable: true
+      artifacts:
+        release: true

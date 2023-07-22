@@ -3,6 +3,7 @@ package hgapi
 import (
 	"context"
 	"fmt"
+	"hugegraph/internal/model"
 	"io"
 	"net/http"
 )
@@ -41,7 +42,7 @@ type VertexGetIDResponse struct {
 
 func (r VertexGetIDRequest) Do(ctx context.Context, transport Transport) (*VertexGetIDResponse, error) {
 
-	req, _ := newRequest("GET", fmt.Sprintf(`/graphs/${GRAPH_NAME}/graph/vertices/"%s"`, r.ID), r.Body)
+	req, _ := newRequest("GET", fmt.Sprintf(model.UrlPrefix+`/graphs/${GRAPH_NAME}/graph/vertices/"%s"`, r.ID), r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

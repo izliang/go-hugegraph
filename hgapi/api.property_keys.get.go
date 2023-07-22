@@ -3,6 +3,7 @@ package hgapi
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -52,7 +53,7 @@ type PropertyKeysGetResponse struct {
 
 func (r PropertyKeysGetRequest) Do(ctx context.Context, transport Transport) (*PropertyKeysGetResponse, error) {
 
-	req, _ := newRequest("GET", "/graphs/${GRAPH_NAME}/schema/propertykeys", r.Body)
+	req, _ := newRequest("GET", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys", r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

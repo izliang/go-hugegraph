@@ -3,6 +3,7 @@ package hgapi
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -84,7 +85,7 @@ func (r PropertyKeysCreateRequest) Do(ctx context.Context, transport Transport) 
 	}
 	byteBody, _ := json.Marshal(&r)               // 序列化
 	reader := strings.NewReader(string(byteBody)) // 转化为reader
-	req, _ := newRequest("POST", "/graphs/${GRAPH_NAME}/schema/propertykeys", reader)
+	req, _ := newRequest("POST", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys", reader)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

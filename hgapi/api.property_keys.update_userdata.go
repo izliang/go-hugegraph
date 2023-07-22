@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"hugegraph/internal/model"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -89,7 +90,7 @@ func (r PropertyKeysUpdateUserdataRequest) Do(ctx context.Context, transport Tra
 	byteBody, _ := json.Marshal(&r)               // 序列化
 	reader := strings.NewReader(string(byteBody)) // 转化为reader
 
-	req, _ := newRequest("PUT", fmt.Sprintf("/graphs/${GRAPH_NAME}/schema/propertykeys/%s?action=%s", r.Name, r.Action), reader)
+	req, _ := newRequest("PUT", fmt.Sprintf(model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys/%s?action=%s", r.Name, r.Action), reader)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

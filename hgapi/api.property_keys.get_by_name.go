@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -60,7 +61,7 @@ func (r PropertyKeysGetByNameRequest) Do(ctx context.Context, transport Transpor
 		return nil, errors.New("PropertyKeysGetByNameRequest Param error, name is not empty")
 	}
 
-	req, _ := newRequest("GET", fmt.Sprintf("/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
+	req, _ := newRequest("GET", fmt.Sprintf(model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

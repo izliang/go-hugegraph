@@ -74,7 +74,9 @@ func TestSchemaGet(t *testing.T) {
 
 	client := initClient()
 
-	res, err := client.SchemaGet()
+	res, err := client.SchemaGet(
+		client.SchemaGet.WithFormat("groovy"),
+	)
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
@@ -130,7 +132,7 @@ func TestPropertyKeysDeleteByName(t *testing.T) {
 	client := initClient()
 
 	res, err := client.PropertyKeys.DeleteByName(
-		client.PropertyKeys.DeleteByName.WithName("age"),
+		client.PropertyKeys.DeleteByName.WithName("title"),
 	)
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
@@ -197,15 +199,32 @@ func TestVertexLabelCreate(t *testing.T) {
 	fmt.Printf("我是结果=>%+v\n", res.Data)
 }
 
+func TestVertexLabelCreate1(t *testing.T) {
+	client := initClient()
+
+	res, err := client.VertexLabel.Create(
+		client.VertexLabel.Create.WithData(hgapi.VertexLabelCreateRequestData{
+			Name:             "vertex",
+			IDStrategy:       hgapi.VertexLabelIDStrategyTypeCustomizeString,
+			Properties:       []string{"title"},
+			PrimaryKeys:      nil,
+			NullableKeys:     nil,
+			EnableLabelIndex: true,
+		}),
+	)
+	if err != nil {
+		log.Fatalf("Error getting the response: %s\n", err)
+	}
+
+	fmt.Printf("我是结果=>%+v\n", res.Data)
+}
+
 func TestGremlinGet(t *testing.T) {
 	client := initClient()
 
 	res, err := client.Gremlin.Get(
 		client.Gremlin.Get.WithGremlinGetData(hgapi.GremlinGetRequestReqData{
-			Gremlin:  "hugegraph.traversal().V('1:marko')",
-			Bindings: "",
-			Language: "",
-			Aliases:  "",
+			Gremlin: "lemma.traversal().V().limit(10)",
 		}),
 	)
 	if err != nil {
@@ -217,4 +236,45 @@ func TestGremlinGet(t *testing.T) {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
 	fmt.Println("我是结果=>" + string(bytes))
+}
+
+func TestGremlinPost(t *testing.T) {
+	client := initClient()
+	client.Gremlin.Post(
+		client.Gremlin.Post.WithGremlinPostData(hgapi.GremlinPostRequestReqData{
+			Gremlin: "g.V().limit(10)",
+		}),
+	)
+}
+
+type QueryCase struct {
+	Word             string
+	FeatureId        int64
+	RelationCategory string
+	Limit            int
+}
+
+func TestGremlinSuggest(t *testing.T) {
+	client := initClient()
+
+	queryCase := &QueryCase{
+		Word:             "葡萄",
+		FeatureId:        3724,
+		RelationCategory: "treeItemTreeItem",
+		Limit:            15,
+	}
+
+	client.Gremlin.Post(
+		client.Gremlin.Post.WithGremlinPostData(hgapi.GremlinPostRequestReqData{
+			Gremlin:  fmt.Sprintf("g.V().hasLabel('lemma').has('lemmaTitle',Text.contains('%s')).where(bothE().has('featureId',__.unfold().is(%d)).has('relationCategory','%s')).dedup().limit(%d)", queryCase.Word, queryCase.FeatureId, queryCase.RelationCategory, queryCase.Limit),
+			Bindings: nil,
+			Aliases: struct {
+				Graph string `json:"graph"`
+				G     string `json:"g"`
+			}{
+				Graph: "baike-lemma",
+				G:     "__g_baike-lemma",
+			},
+		}),
+	)
 }

@@ -25,7 +25,8 @@ type VertexLabel struct {
 	Create VertexLabelCreate
 }
 type Gremlin struct {
-	Get GremlinGet
+	Get  GremlinGet
+	Post GremlinPost
 }
 
 // New creates new API
@@ -46,7 +47,8 @@ func New(t Transport) *API {
 			Create: newVertexLabelCreateFunc(t),
 		},
 		Gremlin: &Gremlin{
-			Get: newGremlinGetFunc(t),
+			Get:  newGremlinGetFunc(t),
+			Post: newGremlinPostFunc(t),
 		},
 	}
 }

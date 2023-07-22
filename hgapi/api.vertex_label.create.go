@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"hugegraph/internal/model"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -87,7 +88,7 @@ func (r VertexLabelCreateRequest) Do(ctx context.Context, transport Transport) (
 	}
 	reader := strings.NewReader(string(bytes)) // 转化为reader
 
-	req, _ := newRequest("POST", "/graphs/${GRAPH_NAME}/schema/vertexlabels", reader)
+	req, _ := newRequest("POST", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/vertexlabels", reader)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

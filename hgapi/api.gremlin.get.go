@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -36,10 +35,7 @@ type GremlinGetRequest struct {
 }
 
 type GremlinGetRequestReqData struct {
-	Gremlin  string
-	Bindings string
-	Language string
-	Aliases  string
+	Gremlin string `json:"gremlin"`
 }
 
 type GremlinGetResponse struct {
@@ -54,13 +50,14 @@ func (r GremlinGetRequest) Do(ctx context.Context, transport Transport) (*Gremli
 		return nil, errors.New("GremlinGetRequest param error , gremlin is empty")
 	}
 
-	if len(r.GremlinGet.Language) < 1 {
-		r.GremlinGet.Language = "gremlin-groovy"
+	req, _ := newRequest("GET", "/gremlin", r.Body)
+
+	params := url.Values{}
+	if len(r.GremlinGet.Gremlin) > 0 {
+		params.Set("gremlin", r.GremlinGet.Gremlin)
 	}
 
-	path := fmt.Sprintf("/gremlin?gremlin=%s", url.QueryEscape(r.GremlinGet.Gremlin))
-	req, _ := newRequest("GET", path, r.Body)
-
+	req.URL.RawQuery = params.Encode()
 	if ctx != nil {
 		req = req.WithContext(ctx)
 	}
