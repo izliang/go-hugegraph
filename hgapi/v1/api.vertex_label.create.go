@@ -1,9 +1,10 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
+	"hugegraph/hgapi"
 	"hugegraph/internal/model"
 	"io/ioutil"
 	"net/http"
@@ -16,7 +17,7 @@ import (
 //
 // See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/vertexlabel/#131-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAvertexlabel
 //
-func newVertexLabelCreateFunc(t Transport) VertexLabelCreate {
+func newVertexLabelCreateFunc(t hgapi.Transport) VertexLabelCreate {
 	return func(o ...func(*VertexLabelCreateRequest)) (*VertexLabelCreateResponse, error) {
 		var r = VertexLabelCreateRequest{}
 		for _, f := range o {
@@ -68,7 +69,7 @@ type VertexLabelCreateResponseData struct {
 	} `json:"user_data,omitempty"`
 }
 
-func (r VertexLabelCreateRequest) Do(ctx context.Context, transport Transport) (*VertexLabelCreateResponse, error) {
+func (r VertexLabelCreateRequest) Do(ctx context.Context, transport hgapi.Transport) (*VertexLabelCreateResponse, error) {
 
 	if r.Data == nil {
 		return nil, errors.New("VertexLabelCreateRequest Param error, data is nil")
@@ -88,7 +89,7 @@ func (r VertexLabelCreateRequest) Do(ctx context.Context, transport Transport) (
 	}
 	reader := strings.NewReader(string(bytes)) // 转化为reader
 
-	req, _ := newRequest("POST", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/vertexlabels", reader)
+	req, _ := hgapi.NewRequest("POST", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/vertexlabels", reader)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

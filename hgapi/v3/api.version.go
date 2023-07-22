@@ -1,8 +1,9 @@
-package hgapi
+package v3
 
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/hgapi"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -14,7 +15,7 @@ import (
 //
 // See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/other/#1011-%E6%9F%A5%E7%9C%8Bhugegraph%E7%9A%84%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF
 //
-func newVersionFunc(t Transport) Version {
+func newVersionFunc(t hgapi.Transport) Version {
 	return func(o ...func(*VersionRequest)) (*VersionResponse, error) {
 		var r = VersionRequest{}
 		for _, f := range o {
@@ -43,9 +44,9 @@ type VersionResponse struct {
 	} `json:"versions"`
 }
 
-func (r VersionRequest) Do(ctx context.Context, transport Transport) (*VersionResponse, error) {
+func (r VersionRequest) Do(ctx context.Context, transport hgapi.Transport) (*VersionResponse, error) {
 
-	req, _ := newRequest("GET", "/versions", r.Body)
+	req, _ := hgapi.NewRequest("GET", "/versions", r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

@@ -1,4 +1,4 @@
-package hgapi
+package v1
 
 type VertexLabelIDStrategyType string
 

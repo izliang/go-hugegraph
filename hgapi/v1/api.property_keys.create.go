@@ -1,9 +1,9 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
-	"hugegraph/internal/model"
+	"hugegraph/hgapi"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -38,7 +38,7 @@ const (
 //
 // See full documentation https://hugegraph.apache.org/cn/docs/clients/restful-api/propertykey/#121-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-propertykey
 //
-func newPropertyKeysCreateFunc(t Transport) PropertyKeysCreate {
+func newPropertyKeysCreateFunc(t hgapi.Transport) PropertyKeysCreate {
 	return func(o ...func(*PropertyKeysCreateRequest)) (*PropertyKeysCreateResponse, error) {
 		var r = PropertyKeysCreateRequest{}
 		for _, f := range o {
@@ -77,7 +77,7 @@ type PropertyKeysCreateResponse struct {
 	TaskID int `json:"task_id"`
 }
 
-func (r PropertyKeysCreateRequest) Do(ctx context.Context, transport Transport) (*PropertyKeysCreateResponse, error) {
+func (r PropertyKeysCreateRequest) Do(ctx context.Context, transport hgapi.Transport) (*PropertyKeysCreateResponse, error) {
 
 	bytes, err := json.Marshal(r)
 	if err != nil {
@@ -85,7 +85,7 @@ func (r PropertyKeysCreateRequest) Do(ctx context.Context, transport Transport) 
 	}
 	byteBody, _ := json.Marshal(&r)               // 序列化
 	reader := strings.NewReader(string(byteBody)) // 转化为reader
-	req, _ := newRequest("POST", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys", reader)
+	req, _ := hgapi.NewRequest("POST", "/graphs/${GRAPH_NAME}/schema/propertykeys", reader)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

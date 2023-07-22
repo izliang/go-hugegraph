@@ -3,25 +3,16 @@ package hugegraph_test
 import (
 	"fmt"
 	"hugegraph"
-	"hugegraph/hgapi"
+	"hugegraph/hgapi/v1"
+	"io"
 	"io/ioutil"
 	"log"
-	"net/http"
-	"strings"
 	"testing"
 )
 
-var defaultResponse = http.Response{
-	Status:        "200 OK",
-	StatusCode:    200,
-	ContentLength: 2,
-	Header:        http.Header(map[string][]string{"Content-Type": {"application/json"}}),
-	Body:          ioutil.NopCloser(strings.NewReader(`{}`)),
-}
+func initClient() *hugegraph.CommonClient {
 
-func initClient() *hugegraph.Client {
-
-	client, err := hugegraph.NewDefaultClient()
+	client, err := hugegraph.NewDefaultCommonClient()
 
 	if err != nil {
 		log.Fatalf("Error creating the client: %s\n", err)
@@ -38,15 +29,16 @@ func TestClient(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(res.Body)
 
 	fmt.Println(res.Versions)
 
 	fmt.Println(res.Versions.Version)
-}
-
-type VertexCase1 struct {
-	Name string
 }
 
 func TestVertexById(t *testing.T) {
@@ -60,7 +52,12 @@ func TestVertexById(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(res.Body)
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -80,7 +77,12 @@ func TestSchemaGet(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(res.Body)
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -95,13 +97,18 @@ func TestPropertyKeysCreate(t *testing.T) {
 
 	res, err := client.PropertyKeys.Create(
 		client.PropertyKeys.Create.WithName("title"),
-		client.PropertyKeys.Create.WithDataType(hgapi.PropertyDataTypeInt),
-		client.PropertyKeys.Create.WithCardinality(hgapi.PropertyCardinalityTypeSingle),
+		client.PropertyKeys.Create.WithDataType(v1.PropertyDataTypeInt),
+		client.PropertyKeys.Create.WithCardinality(v1.PropertyCardinalityTypeSingle),
 	)
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(res.Body)
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -118,7 +125,12 @@ func TestPropertyKeysGet(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(res.Body)
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -137,7 +149,12 @@ func TestPropertyKeysDeleteByName(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Error getting the response: %s\n", err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(res.Body)
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -166,8 +183,8 @@ func TestProperKeysUpdateUserdata(t *testing.T) {
 
 	res, err := client.PropertyKeys.UpdateUserdata(
 		client.PropertyKeys.UpdateUserdata.WithName("title"),
-		client.PropertyKeys.UpdateUserdata.WithAction(hgapi.PropertyKeyActionAppend),
-		client.PropertyKeys.UpdateUserdata.WithUserdata(hgapi.PropertyKeysUpdateUserData{
+		client.PropertyKeys.UpdateUserdata.WithAction(v1.PropertyKeyActionAppend),
+		client.PropertyKeys.UpdateUserdata.WithUserdata(v1.PropertyKeysUpdateUserData{
 			Min: 1,
 			Max: 255,
 		}),
@@ -183,9 +200,9 @@ func TestVertexLabelCreate(t *testing.T) {
 	client := initClient()
 
 	res, err := client.VertexLabel.Create(
-		client.VertexLabel.Create.WithData(hgapi.VertexLabelCreateRequestData{
+		client.VertexLabel.Create.WithData(v1.VertexLabelCreateRequestData{
 			Name:             "vertex",
-			IDStrategy:       hgapi.VertexLabelIDStrategyTypeAutomatic,
+			IDStrategy:       v1.VertexLabelIDStrategyTypeAutomatic,
 			Properties:       []string{"title"},
 			PrimaryKeys:      nil,
 			NullableKeys:     nil,
@@ -203,9 +220,9 @@ func TestVertexLabelCreate1(t *testing.T) {
 	client := initClient()
 
 	res, err := client.VertexLabel.Create(
-		client.VertexLabel.Create.WithData(hgapi.VertexLabelCreateRequestData{
+		client.VertexLabel.Create.WithData(v1.VertexLabelCreateRequestData{
 			Name:             "vertex",
-			IDStrategy:       hgapi.VertexLabelIDStrategyTypeCustomizeString,
+			IDStrategy:       v1.VertexLabelIDStrategyTypeCustomizeString,
 			Properties:       []string{"title"},
 			PrimaryKeys:      nil,
 			NullableKeys:     nil,
@@ -223,7 +240,7 @@ func TestGremlinGet(t *testing.T) {
 	client := initClient()
 
 	res, err := client.Gremlin.Get(
-		client.Gremlin.Get.WithGremlinGetData(hgapi.GremlinGetRequestReqData{
+		client.Gremlin.Get.WithGremlinGetData(v1.GremlinGetRequestReqData{
 			Gremlin: "lemma.traversal().V().limit(10)",
 		}),
 	)
@@ -240,11 +257,14 @@ func TestGremlinGet(t *testing.T) {
 
 func TestGremlinPost(t *testing.T) {
 	client := initClient()
-	client.Gremlin.Post(
-		client.Gremlin.Post.WithGremlinPostData(hgapi.GremlinPostRequestReqData{
+	_, err := client.Gremlin.Post(
+		client.Gremlin.Post.WithGremlinPostData(v1.GremlinPostRequestReqData{
 			Gremlin: "g.V().limit(10)",
 		}),
 	)
+	if err != nil {
+		return
+	}
 }
 
 type QueryCase struct {
@@ -264,8 +284,8 @@ func TestGremlinSuggest(t *testing.T) {
 		Limit:            15,
 	}
 
-	client.Gremlin.Post(
-		client.Gremlin.Post.WithGremlinPostData(hgapi.GremlinPostRequestReqData{
+	_, err := client.Gremlin.Post(
+		client.Gremlin.Post.WithGremlinPostData(v1.GremlinPostRequestReqData{
 			Gremlin:  fmt.Sprintf("g.V().hasLabel('lemma').has('lemmaTitle',Text.contains('%s')).where(bothE().has('featureId',__.unfold().is(%d)).has('relationCategory','%s')).dedup().limit(%d)", queryCase.Word, queryCase.FeatureId, queryCase.RelationCategory, queryCase.Limit),
 			Bindings: nil,
 			Aliases: struct {
@@ -277,4 +297,7 @@ func TestGremlinSuggest(t *testing.T) {
 			},
 		}),
 	)
+	if err != nil {
+		return
+	}
 }

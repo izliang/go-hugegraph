@@ -1,8 +1,9 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/hgapi"
 	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
@@ -16,7 +17,7 @@ import (
 //
 // See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/schema/#11-schema
 //
-func newSchemaGetFunc(t Transport) SchemaGet {
+func newSchemaGetFunc(t hgapi.Transport) SchemaGet {
 	return func(o ...func(*SchemaGetRequest)) (*SchemaGetResponse, error) {
 		var r = SchemaGetRequest{}
 		for _, f := range o {
@@ -96,9 +97,9 @@ type SchemaGetResponse struct {
 	} `json:"indexlabels"`
 }
 
-func (r SchemaGetRequest) Do(ctx context.Context, transport Transport) (*SchemaGetResponse, error) {
+func (r SchemaGetRequest) Do(ctx context.Context, transport hgapi.Transport) (*SchemaGetResponse, error) {
 
-	req, _ := newRequest("GET", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema", nil)
+	req, _ := hgapi.NewRequest("GET", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema", nil)
 
 	if len(r.Format) > 0 {
 		params := url.Values{}

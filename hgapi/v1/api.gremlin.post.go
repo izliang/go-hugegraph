@@ -1,10 +1,11 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
 	_ "fmt"
+	"hugegraph/hgapi"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -18,7 +19,7 @@ import (
 //
 // See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/gremlin/#811-%E5%90%91hugegraphserver%E5%8F%91%E9%80%81gremlin%E8%AF%AD%E5%8F%A5get%E5%90%8C%E6%AD%A5%E6%89%A7%E8%A1%8C
 //
-func newGremlinPostFunc(t Transport) GremlinPost {
+func newGremlinPostFunc(t hgapi.Transport) GremlinPost {
 	return func(o ...func(*GremlinPostRequest)) (*GremlinPostResponse, error) {
 		var r = GremlinPostRequest{}
 		for _, f := range o {
@@ -72,7 +73,7 @@ type GremlinPostResponseData struct {
 	Trace     []string `json:"trace,omitempty"`
 }
 
-func (r GremlinPostRequest) Do(ctx context.Context, transport Transport) (*GremlinPostResponse, error) {
+func (r GremlinPostRequest) Do(ctx context.Context, transport hgapi.Transport) (*GremlinPostResponse, error) {
 
 	if len(r.GremlinPost.Gremlin) < 1 {
 		return nil, errors.New("GremlinPostRequest param error , gremlin is empty")
@@ -102,7 +103,7 @@ func (r GremlinPostRequest) Do(ctx context.Context, transport Transport) (*Greml
 
 	reader := strings.NewReader(string(byteBody)) // 转化为reader
 
-	req, _ := newRequest("POST", "/gremlin", reader)
+	req, _ := hgapi.NewRequest("POST", "/gremlin", reader)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

@@ -1,8 +1,9 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/hgapi"
 	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
@@ -15,7 +16,7 @@ import (
 //
 // See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/other/#1011-%E6%9F%A5%E7%9C%8Bhugegraph%E7%9A%84%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF
 //
-func newVertexCreateFunc(t Transport) VertexCreate {
+func newVertexCreateFunc(t hgapi.Transport) VertexCreate {
 	return func(o ...func(*VertexCreateRequest)) (*VertexCreateResponse, error) {
 		var r = VertexCreateRequest{}
 		for _, f := range o {
@@ -44,9 +45,9 @@ type VertexCreateResponse struct {
 	} `json:"VertexCreates"`
 }
 
-func (r VertexCreateRequest) Do(ctx context.Context, transport Transport) (*VertexCreateResponse, error) {
+func (r VertexCreateRequest) Do(ctx context.Context, transport hgapi.Transport) (*VertexCreateResponse, error) {
 
-	req, _ := newRequest("GET", model.UrlPrefix+"/VertexCreates", r.Body)
+	req, _ := hgapi.NewRequest("GET", model.UrlPrefix+"/VertexCreates", r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

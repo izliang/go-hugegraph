@@ -1,10 +1,11 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"hugegraph/hgapi"
 	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
@@ -17,7 +18,7 @@ import (
 //
 // See full documentation https://hugegraph.apache.org/cn/docs/clients/restful-api/propertykey/#124-%E6%A0%B9%E6%8D%AEname%E8%8E%B7%E5%8F%96propertykey
 //
-func newPropertyKeysGetByNameFunc(t Transport) PropertyKeysGetByName {
+func newPropertyKeysGetByNameFunc(t hgapi.Transport) PropertyKeysGetByName {
 	return func(o ...func(*PropertyKeysGetByNameRequest)) (*PropertyKeysGetByNameResponse, error) {
 		var r = PropertyKeysGetByNameRequest{}
 		for _, f := range o {
@@ -55,13 +56,13 @@ type PropertyKeysGetByNameData struct {
 	} `json:"user_data"`
 }
 
-func (r PropertyKeysGetByNameRequest) Do(ctx context.Context, transport Transport) (*PropertyKeysGetByNameResponse, error) {
+func (r PropertyKeysGetByNameRequest) Do(ctx context.Context, transport hgapi.Transport) (*PropertyKeysGetByNameResponse, error) {
 
 	if len(r.Name) < 1 {
 		return nil, errors.New("PropertyKeysGetByNameRequest Param error, name is not empty")
 	}
 
-	req, _ := newRequest("GET", fmt.Sprintf(model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
+	req, _ := hgapi.NewRequest("GET", fmt.Sprintf(model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

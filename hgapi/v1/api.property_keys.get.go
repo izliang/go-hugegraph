@@ -1,8 +1,9 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
+	"hugegraph/hgapi"
 	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
@@ -15,7 +16,7 @@ import (
 //
 // See full documentation https://hugegraph.apache.org/cn/docs/clients/restful-api/propertykey/#123-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%9A%84-propertykey
 //
-func newPropertyKeysGetFunc(t Transport) PropertyKeysGet {
+func newPropertyKeysGetFunc(t hgapi.Transport) PropertyKeysGet {
 	return func(o ...func(*PropertyKeysGetRequest)) (*PropertyKeysGetResponse, error) {
 		var r = PropertyKeysGetRequest{}
 		for _, f := range o {
@@ -51,9 +52,9 @@ type PropertyKeysGetResponse struct {
 	} `json:"propertykeys"`
 }
 
-func (r PropertyKeysGetRequest) Do(ctx context.Context, transport Transport) (*PropertyKeysGetResponse, error) {
+func (r PropertyKeysGetRequest) Do(ctx context.Context, transport hgapi.Transport) (*PropertyKeysGetResponse, error) {
 
-	req, _ := newRequest("GET", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys", r.Body)
+	req, _ := hgapi.NewRequest("GET", model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys", r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

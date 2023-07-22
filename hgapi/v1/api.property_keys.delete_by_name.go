@@ -1,10 +1,11 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"hugegraph/hgapi"
 	"hugegraph/internal/model"
 	"io"
 	"io/ioutil"
@@ -17,7 +18,7 @@ import (
 //
 // See full documentation https://hugegraph.apache.org/cn/docs/clients/restful-api/propertykey/#125-%E6%A0%B9%E6%8D%AEname%E5%88%A0%E9%99%A4propertykey
 //
-func newPropertyKeysDeleteByNameFunc(t Transport) PropertyKeysDeleteByName {
+func newPropertyKeysDeleteByNameFunc(t hgapi.Transport) PropertyKeysDeleteByName {
 	return func(o ...func(*PropertyKeysDeleteByNameRequest)) (*PropertyKeysDeleteByNameResponse, error) {
 		var r = PropertyKeysDeleteByNameRequest{}
 		for _, f := range o {
@@ -41,13 +42,13 @@ type PropertyKeysDeleteByNameResponse struct {
 	Body       io.ReadCloser `json:"-"`
 }
 
-func (r PropertyKeysDeleteByNameRequest) Do(ctx context.Context, transport Transport) (*PropertyKeysDeleteByNameResponse, error) {
+func (r PropertyKeysDeleteByNameRequest) Do(ctx context.Context, transport hgapi.Transport) (*PropertyKeysDeleteByNameResponse, error) {
 
 	if len(r.Name) < 1 {
 		return nil, errors.New("PropertyKeysDeleteByNameRequest Param error, name is not empty")
 	}
 
-	req, _ := newRequest("DELETE", fmt.Sprintf(model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
+	req, _ := hgapi.NewRequest("DELETE", fmt.Sprintf(model.UrlPrefix+"/graphs/${GRAPH_NAME}/schema/propertykeys/%s", r.Name), r.Body)
 
 	if ctx != nil {
 		req = req.WithContext(ctx)

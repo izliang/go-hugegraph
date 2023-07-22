@@ -1,9 +1,10 @@
-package hgapi
+package v1
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
+	"hugegraph/hgapi"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -16,7 +17,7 @@ import (
 //
 // See full documentation at https://hugegraph.apache.org/cn/docs/clients/restful-api/gremlin/#811-%E5%90%91hugegraphserver%E5%8F%91%E9%80%81gremlin%E8%AF%AD%E5%8F%A5get%E5%90%8C%E6%AD%A5%E6%89%A7%E8%A1%8C
 //
-func newGremlinGetFunc(t Transport) GremlinGet {
+func newGremlinGetFunc(t hgapi.Transport) GremlinGet {
 	return func(o ...func(*GremlinGetRequest)) (*GremlinGetResponse, error) {
 		var r = GremlinGetRequest{}
 		for _, f := range o {
@@ -44,13 +45,13 @@ type GremlinGetResponse struct {
 	Body       io.ReadCloser `json:"-"`
 }
 
-func (r GremlinGetRequest) Do(ctx context.Context, transport Transport) (*GremlinGetResponse, error) {
+func (r GremlinGetRequest) Do(ctx context.Context, transport hgapi.Transport) (*GremlinGetResponse, error) {
 
 	if len(r.GremlinGet.Gremlin) < 1 {
 		return nil, errors.New("GremlinGetRequest param error , gremlin is empty")
 	}
 
-	req, _ := newRequest("GET", "/gremlin", r.Body)
+	req, _ := hgapi.NewRequest("GET", "/gremlin", r.Body)
 
 	params := url.Values{}
 	if len(r.GremlinGet.Gremlin) > 0 {
